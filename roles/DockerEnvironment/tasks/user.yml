@@ -1,0 +1,43 @@
+- name: Edit adduser.conf
+  lineinfile:
+    path: /etc/adduser.conf
+    regexp: "DIR_MODE=0755"
+    line: "DIR_MODE=0700"
+    state: present
+
+- name: Add carebot user
+  user:
+    name: carebot
+    # groups: sudo    # volitelne, pokud chceme mit s uzivatelem pristup na roota
+    shell: /bin/bash
+    system: true
+    password: '$2a$12$xujls4yul947IW7S4Q4La.4vHTODFLeVXXO1snheeXcGpl.rl/6mq' # pass - Algorithm1-Snare-Preseason
+
+- name: Change carebot home directory mode
+  file:
+    path: /home/carebot
+    mode: '0700'
+
+- name: Create .ssh directory
+  file:
+    path: /home/carebot/.ssh/
+    state: directory
+    owner: carebot
+    group: carebot
+    mode: '0700'
+
+- name: Create authorized_keys file
+  file:
+    path: /home/carebot/.ssh/
+    state: directory
+    owner: carebot
+    group: carebot
+    mode: '0600'
+
+- name: Set up authorized keys
+  authorized_key:
+    user: carebot
+    key: "{{ item }}"
+    state: present
+  with_file:
+      - authorized_keys

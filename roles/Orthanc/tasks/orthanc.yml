@@ -1,0 +1,27 @@
+# Create directory for Orthanc data
+- name: Create Orthanc data directory
+  file:
+    path: /opt/orthanc/db
+    state: directory
+    mode: '0755'
+
+# Deploy Orthanc DICOM server container
+- name: Run Orthanc Docker container
+  docker_container:
+    name: orthanc
+    image: jodogne/orthanc:latest
+    state: started
+    restart_policy: always
+    ports:
+      - "4242:4242"  # DICOM port
+      - "8042:8042"  # HTTP port
+    volumes:
+      - /opt/orthanc/db:/var/lib/orthanc/db 
+    environment:
+      ORTHANC__NAME: "Orthanc Server"
+    detach: yes
+
+- name: Confirm that 200 OK response is returned
+  uri:
+    url: "http://{{ ansible_host }}/8042"
+    status_code: 200

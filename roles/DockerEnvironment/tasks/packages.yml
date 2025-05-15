@@ -1,0 +1,22 @@
+- name: Install packages
+  register: updatesys
+  apt:
+    update_cache: yes
+    name:
+      - ncdu
+      - vim
+      - rsyslog
+      - htop
+      - sudo
+      - psmisc
+      - net-tools
+      - ssh
+      - tcpdump
+      - nmap
+      - lsof
+      - strace
+      - iptables
+      - iptables-persistent
+      - curl
+      - ca-certificates
+    state: present

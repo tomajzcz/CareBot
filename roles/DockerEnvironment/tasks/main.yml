@@ -1,0 +1,15 @@
+- name: common task
+
+- import_tasks: packages.yml
+- import_tasks: docker.yml
+- import_tasks: user.yml
+- import_tasks: sudoers.yml
+- import_tasks: sshd.yml
+- import_tasks: firewall.yml
+
+- name: Reboot machine
+  reboot:
+    connect_timeout: 5
+    reboot_timeout: 120
+  when:
+    reboot is defined

@@ -1,0 +1,7 @@
+- name: Configure sudoers file
+  copy:
+    src: "docker-sudoers"
+    dest: /etc/sudoers.d/docker
+    owner: root
+    group: root
+    mode: 0440

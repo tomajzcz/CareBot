@@ -1,0 +1,17 @@
+- name: restart sshd
+  service: name=sshd state=restarted
+
+- name: enable sshd
+  service: name=sshd enabled=yes
+
+- name: enable iptables
+  service: name=cloud-init enabled=yes
+
+- name: restart iptables
+  service: name=iptables state=restarted
+
+- name: enable docker
+  service: name=docker enabled=yes
+
+- name: restart docker
+  service: name=docker state=restarted

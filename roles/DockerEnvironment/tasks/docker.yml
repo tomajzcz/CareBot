@@ -1,0 +1,41 @@
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Install Docker
+  register: updatesys
+  apt:
+    update_cache: yes
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+      - python3
+    state: present
+
+- name: Install Docker Python module
+  pip:
+    name: docker
+    state: present
+
+- name: Configure Docker logging
+  blockinfile:
+    path: /etc/docker/daemon.json
+    block: |
+          {
+            "log-driver": "json-file",
+            "log-opts": {
+              "max-size": "10m"
+            }
+          }
+  notify:
+    - enable docker
+    - restart docker

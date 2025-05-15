@@ -1,0 +1,18 @@
+- name: Configure IPv4 firewall
+  copy:
+    src: "rules.v4"
+    dest: /etc/iptables/rules.v4
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure IPv6 firewall
+  copy:
+    src: "rules.v6"
+    dest: /etc/iptables/rules.v6
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - enable iptables
+    - restart iptables

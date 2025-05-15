@@ -1,0 +1,28 @@
+- name: Create sshd_config.d
+  file:
+    path: /etc/ssh/sshd_config.d
+    state: directory
+    owner: root
+    group: root
+
+- name: Configure sshd
+  copy:
+    src: "sshd_config.conf"
+    dest: /etc/ssh/sshd_config.d/carebot.conf
+    owner: root
+    group: root
+
+- name: Delete Include
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "Include"
+    state: absent  
+
+- name: Add Include to sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "Include /etc/ssh/sshd_config.d/*.conf"
+    state: present
+  notify:
+    - enable sshd
+    - restart sshd

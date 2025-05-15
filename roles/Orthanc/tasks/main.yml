@@ -1,0 +1,4 @@
+- name: common task
+
+- import_tasks: orthanc.yml
+- import_tasks: firewall.yml
