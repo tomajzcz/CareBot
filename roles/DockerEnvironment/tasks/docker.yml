@@ -18,24 +18,23 @@
       - containerd.io
       - docker-buildx-plugin
       - docker-compose-plugin
-      - python3
+      - python3-docker
     state: present
 
-- name: Install Docker Python module
-  pip:
-    name: docker
-    state: present
-
+# Jediny problem je tady s tim, ze se soubor prepise - zkousel jsem pouzit modul buildinline, tam to ale hazelo marker radky navic nebo se to neprepisovalo, tj. pripojily se po opetovnem spusteni nove radky.
 - name: Configure Docker logging
-  blockinfile:
-    path: /etc/docker/daemon.json
-    block: |
+  copy:
+    dest: /etc/docker/daemon.json
+    content: |
           {
             "log-driver": "json-file",
             "log-opts": {
               "max-size": "10m"
             }
           }
+    owner: root
+    group: root
+    mode: 0644
   notify:
     - enable docker
     - restart docker

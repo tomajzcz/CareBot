@@ -1,5 +1,3 @@
-- name: common task
-
 - import_tasks: packages.yml
 - import_tasks: docker.yml
 - import_tasks: user.yml
