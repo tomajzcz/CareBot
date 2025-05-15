@@ -1,9 +1,20 @@
 # Create directory for Orthanc data
 - name: Create Orthanc data directory
   file:
-    path: /opt/orthanc/db
+    path: /opt/orthanc
     state: directory
     mode: '0755'
+
+# Copy configuration files
+- name: Copy orthanc.json file
+  copy:
+    src: "orthanc.json"
+    dest: /opt/orthanc/orthanc.json
+
+- name: Copy credentials.json file
+  copy:
+    src: credentials.json
+    dest: /opt/orthanc/credentials.json
 
 # Deploy Orthanc DICOM server container
 - name: Run Orthanc Docker container
@@ -16,12 +27,16 @@
       - "4242:4242"  # DICOM port
       - "8042:8042"  # HTTP port
     volumes:
-      - /opt/orthanc/db:/var/lib/orthanc/db 
-    environment:
+      - /opt/orthanc/orthanc.json:/etc/orthanc/orthanc.json:ro
+      - /opt/orthanc/credentials.json:/etc/orthanc/credentials.json:ro
+    env:
       ORTHANC__NAME: "Orthanc Server"
     detach: yes
 
 - name: Confirm that 200 OK response is returned
   uri:
-    url: "http://{{ ansible_host }}/8042"
+    url: "http://{{ ansible_host }}:8042"
     status_code: 200
+    url_username: "orthanc"
+    url_password: "hallelujah"
+    force_basic_auth: yes

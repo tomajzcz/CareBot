@@ -28,7 +28,7 @@
 
 - name: Create authorized_keys file
   file:
-    path: /home/carebot/.ssh/
+    path: /home/carebot/.ssh/authorized_keys
     state: directory
     owner: carebot
     group: carebot
