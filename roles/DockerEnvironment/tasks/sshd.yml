@@ -25,4 +25,4 @@
     state: present
   notify:
     - enable sshd
-    - restart sshd
+    #- restart sshd
