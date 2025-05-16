@@ -18,22 +18,17 @@
     src: credentials.json
     dest: /opt/orthanc/credentials.json
 
-# Deploy Orthanc DICOM server container
-- name: Run Orthanc Docker container
-  docker_container:
-    name: orthanc
-    image: jodogne/orthanc:latest
-    state: started
-    restart_policy: always
-    ports:
-      - "4242:4242"  # DICOM port
-      - "8042:8042"  # HTTP port
-    volumes:
-      - /opt/orthanc/orthanc.json:/etc/orthanc/orthanc.json:ro
-      - /opt/orthanc/credentials.json:/etc/orthanc/credentials.json:ro
-    env:
-      ORTHANC__NAME: "Orthanc Server"
-    detach: yes
+# Create docker-compose.yml
+- name: Create docker-compose.yml
+  copy:
+    src: docker-compose.yml
+    dest: /opt/orthanc/docker-compose.yml
+    mode: '0644'
+
+- name: Start application with docker-compose
+  command: docker compose up -d
+  args:
+    chdir: /opt/orthanc
 
 - name: Wait for docker to come alive
   wait_for:
