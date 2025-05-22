@@ -1,5 +1,4 @@
 - name: Install packages
-  register: updatesys
   apt:
     update_cache: yes
     name:
